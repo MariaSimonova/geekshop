@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from mainapp.models import ProductCategory,Product
+from mainapp.models import ProductCategory, Product
 
 
 # Create your views here.
@@ -10,7 +10,7 @@ def index(request):
     return render(request, 'mainapp/index.html', context)
 
 
-def products(request):
+def products(request, id=None):
     context = {
         'title': 'geekShop - Каталог',
         'products': Product.objects.all(),
