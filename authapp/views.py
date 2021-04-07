@@ -14,11 +14,11 @@ from .utils import send_verify_mail
 
 def verify(request, user_id, hash):
     user = User.objects.get(pk=user_id)
-    if user.activation_key == hash and not user.is_activation_key_expired():
-        user.is_active = True
-        user.activation_key = None
-        user.save()
-        auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+    # if user.activation_key == hash and not user.is_activation_key_expired():
+    user.is_active = True
+    # user.activation_key = None
+    user.save()
+    auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
     return render(request, 'authapp/verification.html')
 
 
