@@ -44,9 +44,9 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(data=request.POST)
         if form.is_valid():
-            user = form.save()
-            send_verify_mail(user)
-            messages.success(request, 'сообщение подтверждения отправлено')
+            form.save()
+            # send_verify_mail(user)
+            # messages.success(request, 'сообщение подтверждения отправлено')
             return HttpResponseRedirect(reverse('auth:login'))
     else:
         form = UserRegisterForm()
