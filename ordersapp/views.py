@@ -22,14 +22,20 @@ class OrderList(ListView):
         return Order.objects.filter(user=self.request.user)
 
     @method_decorator(login_required())
-    def dispatch(self, *args, **kwargs):
-        return super(ListView, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch()
+
 
 
 class OrderItemsCreate(CreateView):
     model = Order
     fields = []
     success_url = reverse_lazy('ordersapp:orders_list')
+
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch()
+
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -76,6 +82,10 @@ class OrderItemsUpdate(UpdateView):
     fields = []
     success_url = reverse_lazy('ordersapp:orders_list')
 
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch()
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
@@ -111,9 +121,17 @@ class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('ordersapp:orders_list')
 
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch()
+
 
 class OrderRead(DetailView):
     model = Order
+
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,11 +147,10 @@ def order_forming_complete(request, pk):
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
 
 def get_product_price(request, pk):
-    if request.is_ajax():
-        product = Product.objects.filter(pk=int(pk)).first()
-        if product:
-            return JsonResponse({'price': product.price})
-        else:
-            return JsonResponse({'price': 0})
+    product = Product.objects.filter(pk=int(pk)).first()
+    if product:
+        return JsonResponse({'price': product.price})
+
+    return JsonResponse({'price': 0})
 
         
