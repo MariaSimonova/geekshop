@@ -1,0 +1,10 @@
+http://134.0.115.28/order/
+http://134.0.115.28/order/create/
+http://134.0.115.28/order/delete/1/
+http://134.0.115.28/order/forming/complete/1/
+http://134.0.115.28/order/product/1/price/
+http://134.0.115.28/order/read/1/
+http://134.0.115.28/order/update/1/
+http://134.0.115.28/products/
+http://134.0.115.28/products/1/
+http://134.0.115.28/products/page/1/
