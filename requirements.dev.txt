@@ -22,3 +22,4 @@ urllib3==1.26.4
 django-debug-toolbar
 django-debug-toolbar-template-profiler
 django-extensions
+python-memcached
