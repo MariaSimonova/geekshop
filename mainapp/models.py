@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.core.cache import cache
+from django.dispatch import receiver
+from django.db.models.signals import pre_save
+
 
 
 # Create your models here.
@@ -9,6 +12,7 @@ from django.core.cache import cache
 class ProductCategory(models.Model):
     name = models.CharField(verbose_name='имя', max_length=64, unique=True)
     description = models.TextField(verbose_name='описание', blank=True, null=True)
+    discount = models.DecimalField(verbose_name='скидка', max_digits=2, decimal_places=2, default=0)
 
     def __str__(self):
         return self.name
@@ -39,6 +43,13 @@ class Product(models.Model):
     description = models.TextField(verbose_name='описание продукта', blank=True)
     price = models.DecimalField(verbose_name='цена продукта', max_digits=8, decimal_places=2, default=0)
     quantity = models.PositiveIntegerField(verbose_name='количество на складе', default=0)
+    discount = models.DecimalField(verbose_name='скидка', max_digits=2, decimal_places=2, default=0)
 
     def __str__(self):
         return f'{self.name} | {self.category.name}'
+
+    @receiver(pre_save, sender=ProductCategory)
+    def product_is_discount_update_productcategory_save(sender, instance, **kwargs):
+        if instance.pk:
+            if instance.discount != 0:
+                instance.product_set.update(discount=instance.discount)

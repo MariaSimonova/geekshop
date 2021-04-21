@@ -2,9 +2,11 @@ from django.db import models
 from datetime import timedelta
 from django.utils.timezone import now
 from django.utils.functional import cached_property
+from django.db.models import F
 
 from authapp.models import User
 from mainapp.models import Product
+
 
 # Create your models here.
 
@@ -46,16 +48,16 @@ class Basket(models.Model):
 
 
     def delete(self, using=None, keep_parents=False):
-        self.product.quantity += self.quantity
+        self.product.quantity = F('quantity') + self.quantity
         self.product.save()
 
         super().delete()
 
     def refresh_quantity(self):
         if self.pk:
-            self.product.quantity -= self.quantity - Basket.objects.get(pk=self.pk).quantity
+            self.product.quantity = F('quantity') - self.quantity - Basket.objects.get(pk=self.pk).quantity
         else:
-            self.product.quantity -= self.quantity
+            self.product.quantity = F('quantity') - self.quantity
         self.product.save()
 
     def save(self, *args):
